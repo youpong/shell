@@ -1,0 +1,4 @@
+# TARGET
+shell
+# Object files
+*.o
