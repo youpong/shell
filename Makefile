@@ -1,6 +1,6 @@
 .PHONY: clean
 all: shell
 clean:
-	rm -f *.o
+	rm -f *.o shell output
 shell: shell.o error.o
-	$(CXX) -o $@ $^
+	$(CC) -o $@ $^
