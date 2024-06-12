@@ -15,6 +15,7 @@ int main(int argc, char *argv[]) {
 
     strcpy(buf, "date");
     execlp(buf, buf, (char *)0);
+    fclose(f);
     err_ret("couldn't execute: %s", buf);
     exit(127);
 
