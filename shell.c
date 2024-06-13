@@ -9,24 +9,32 @@ noreturn static void execute(FILE* f);
 int main(int argc, char *argv[]) {
     pid_t pid;
     int status;
+    int fd[2];
 
-    char *filename = "output";
-    FILE *f = fopen(filename, "w");
-    if (!f)
-    {
-        err_ret("couldn't open file: %s", filename);
-    }
+    if (pipe(fd) < 0)
+        err_sys("pipe error");
 
     if ((pid = fork()) < 0) {
         err_sys("fork error");
     } else if (pid == 0) { // child
+        close(fd[0]);
+        FILE* f = fdopen(fd[1], "w");
+        if (f == NULL) {
+            err_sys("fdopen error");
+        }
         execute(f);
     }
 
     // parent
     if ((pid = waitpid(pid, &status, 0)) < 0)
         err_sys("waitpid error");
-    fclose(f);    
+    close(fd[1]);
+    FILE *f = fdopen(fd[0], "r");
+    if (f == NULL)
+        err_sys("fdopen error");
+    for(int c; (c = fgetc(f)) != EOF;) {
+        fputc(c, stdout);
+    }
     return 0;
 }
 
