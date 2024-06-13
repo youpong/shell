@@ -4,7 +4,8 @@
 #include <unistd.h>
 
 int main(int argc, char *argv[]) {
-    char buf[BUFSIZ];
+    char exec_file[BUFSIZ];
+    char arg1[BUFSIZ];
 
     char* filename = "output";
     FILE* f = fopen(filename, "w");
@@ -13,10 +14,11 @@ int main(int argc, char *argv[]) {
     }
     dup2(fileno(f), fileno(stdout));
 
-    strcpy(buf, "date");
-    execlp(buf, buf, (char *)0);
+    strcpy(exec_file, "date");
+    strcpy(arg1, "-R");
+    execlp(exec_file, exec_file, arg1, (char *)0);
     fclose(f);
-    err_ret("couldn't execute: %s", buf);
+    err_ret("couldn't execute: %s", exec_file);
     exit(127);
 
     return 0;
