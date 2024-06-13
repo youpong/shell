@@ -1,3 +1,5 @@
+CFLAGS = -std=c17
+
 .PHONY: clean
 all: shell
 clean:
