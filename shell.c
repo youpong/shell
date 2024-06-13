@@ -4,28 +4,11 @@
 #include <unistd.h>
 #include <stdnoreturn.h>
 
-noreturn static void execute();
+noreturn static void execute(FILE* f);
 
 int main(int argc, char *argv[]) {
     pid_t pid;
     int status;
-
-    if ((pid = fork()) < 0) {
-        err_sys("fork error");
-    } else if (pid == 0) { // child
-        execute();
-    }
-
-    // parent
-    if ((pid = waitpid(pid, &status, 0)) < 0)
-        err_sys("waitpid error");
-    return 0;
-}
-
-noreturn static void execute()
-{
-    char exec_file[BUFSIZ];
-    char arg1[BUFSIZ];
 
     char *filename = "output";
     FILE *f = fopen(filename, "w");
@@ -33,6 +16,25 @@ noreturn static void execute()
     {
         err_ret("couldn't open file: %s", filename);
     }
+
+    if ((pid = fork()) < 0) {
+        err_sys("fork error");
+    } else if (pid == 0) { // child
+        execute(f);
+    }
+
+    // parent
+    if ((pid = waitpid(pid, &status, 0)) < 0)
+        err_sys("waitpid error");
+    fclose(f);    
+    return 0;
+}
+
+noreturn static void execute(FILE *f)
+{
+    char exec_file[BUFSIZ];
+    char arg1[BUFSIZ];
+
     dup2(fileno(f), fileno(stdout));
 
     strcpy(exec_file, "date");
