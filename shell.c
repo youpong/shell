@@ -6,7 +6,7 @@
 
 noreturn static void execute(int);
 
-int main(int argc, char *argv[]) {
+int main(void) {
     pid_t pid;
     int status;
     int fd[2];
