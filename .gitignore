@@ -1,4 +1,6 @@
 # TARGET
 shell
+# output file
+output
 # Object files
 *.o
