@@ -1,6 +1,10 @@
+TARGET = shell
+SRCS = shell.c
+OBJS = $(SRCS:.c=.o)
+
 .PHONY: clean
-all: shell
+all: $(TARGET)
 clean:
-	rm -f *.o
-shell: shell.o
+	rm -f $(OBJS) $(TARGET)
+$(TARGET): $(OBJS)
 	$(CXX) -o $@ $<
